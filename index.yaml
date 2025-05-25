@@ -3,6 +3,22 @@ entries:
   wavekit:
   - apiVersion: v2
     appVersion: 0.3.2
+    created: "2025-05-25T11:22:08.371472828Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart for Kubernetes
+    digest: 5d8cb06f00779369a3d07767c1c308e5d43822e30e2261c6d24b49a960d63557
+    name: wavekit
+    type: application
+    urls:
+    - https://github.com/polarityorg/helm-charts/releases/download/wavekit-0.2.1/wavekit-0.2.1.tgz
+    version: 0.2.1
+  - apiVersion: v2
+    appVersion: 0.3.2
     created: "2025-05-25T11:00:04.655397118Z"
     dependencies:
     - name: common
@@ -27,4 +43,4 @@ entries:
     urls:
     - https://github.com/polarityorg/helm-charts/releases/download/wavekit-0.1.0/wavekit-0.1.0.tgz
     version: 0.1.0
-generated: "2025-05-25T11:00:04.655405986Z"
+generated: "2025-05-25T11:22:08.371482957Z"
