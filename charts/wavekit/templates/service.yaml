@@ -5,11 +5,15 @@ metadata:
   labels:
     {{- include "wavekit.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  type: ClusterIP
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
+    - name: webui
+      port: {{ .Values.wavekit.port }}
+    - name: metrics
+      port: {{ .Values.metrics.port }}
+    {{- if .Values.debug.enabled }}
+    - name: debug
+      port: {{ .Values.debug.port }}
+    {{- end }}
   selector:
     {{- include "wavekit.selectorLabels" . | nindent 4 }}
