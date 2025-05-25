@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  wavekit:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-05-25T10:02:09.103990069Z"
+    description: A Helm chart for Kubernetes
+    digest: 20a45f1c93286ecfe6f52364294bf1e39267633237d823c6753ef2f8134cfd61
+    name: wavekit
+    type: application
+    urls:
+    - https://github.com/polarityorg/helm-charts/releases/download/wavekit-0.1.0/wavekit-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-05-25T10:02:09.103994728Z"
