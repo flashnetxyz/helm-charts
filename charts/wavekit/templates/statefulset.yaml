@@ -39,13 +39,13 @@ spec:
             {{- end }}
           env:
             - name: WK_PORT
-              value: {{ .Values.wavekit.port }}
+              value: {{ quote .Values.wavekit.port }}
             - name: WK_METRICSPORT
-              value: {{ .Values.metrics.port }}
+              value: {{ quote .Values.metrics.port }}
             - name: WK_DEBUG_ENABLE
-              value: {{ .Values.debug.enabled }}
+              value: {{ quote .Values.debug.enabled }}
             - name: WK_DEBUG_PORT
-              value: {{ .Values.debug.port }}
+              value: {{ quote .Values.debug.port }}
             - name: WK_RISECTLDIR
               value: /var/wavekit/risectl
             {{- if .Values.wavekit.extraEnvVars }}
