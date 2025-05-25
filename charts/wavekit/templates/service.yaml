@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "wavekit.fullname" . }}
+  labels:
+    {{- include "wavekit.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: webui
+      port: {{ .Values.wavekit.port }}
+    - name: metrics
+      port: {{ .Values.metrics.port }}
+    {{- if .Values.debug.enabled }}
+    - name: debug
+      port: {{ .Values.debug.port }}
+    {{- end }}
+  selector:
+    {{- include "wavekit.selectorLabels" . | nindent 4 }}

@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "wavekit.fullname" . }}
+  labels:
+  {{- include "wavekit.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "wavekit.fullname" . }}
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "wavekit.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "wavekit.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecret }}
+      imagePullSecrets:
+        - name: {{ . }}
+      {{- end }}
+      serviceAccountName: {{ include "wavekit.serviceAccountName" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ default (printf "v%s" .Chart.AppVersion) .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: webui
+              containerPort: {{ .Values.wavekit.port }}
+            - name: metrics
+              containerPort: {{ .Values.metrics.port }}
+            {{- if .Values.debug.enabled }}
+            - name: debug
+              containerPort: {{ .Values.debug.port }}
+            {{- end }}
+          env:
+            - name: WK_PORT
+              value: {{ quote .Values.wavekit.port }}
+            - name: WK_METRICSPORT
+              value: {{ quote .Values.metrics.port }}
+            - name: WK_DEBUG_ENABLE
+              value: {{ quote .Values.debug.enabled }}
+            - name: WK_DEBUG_PORT
+              value: {{ quote .Values.debug.port }}
+            - name: WK_RISECTLDIR
+              value: /var/wavekit/risectl
+            {{- if .Values.wavekit.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.wavekit.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          volumeMounts:
+            - name: {{ include "wavekit.fullname" . }}
+              mountPath: /var/wavekit
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ include "wavekit.fullname" . }}
+      spec:
+        storageClassName: {{ .Values.wavekit.storage.storageClassName }}
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.wavekit.storage.size }}
