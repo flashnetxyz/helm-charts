@@ -14,3 +14,7 @@ dependencies:
     tags:
       - bitnami-common
     version: 2.x.x
+  - name: redis
+    version: 21.1.8
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
