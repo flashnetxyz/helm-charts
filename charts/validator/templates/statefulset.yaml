@@ -63,7 +63,25 @@ spec:
           {{- end }}
           {{- with .Values.env }}
           env:
+            - name: INDEX
+              valueFrom:
+                fieldRef:
+                  fieldPath: "metadata.labels['apps.kubernetes.io/pod-index']"
             {{- toYaml . | nindent 12 }}
+            - name: GRPC_BIND_ADDRESS
+              value: {{ $.Values.config.grpcBindAddress }}
+            - name: VALIDATOR_REDIS_CONNECTION_URL
+              value: {{ $.Values.config.validatorRedisConnectionUrl }}
+            - name: SIGNING_KEY
+              value: {{ $.Values.config.signingKey }}
+            - name: VALIDATOR_INDEX
+              valueFrom:
+                fieldRef:
+                  fieldPath: "metadata.labels['apps.kubernetes.io/pod-index']"
+            - name: RUNNING_AUTHORITY
+              value: {{ $.Values.config.runningAuthority }}
+            - name: TEE_CRYPTO_MODULE_PUBLIC_KEY
+              value: {{ $.Values.config.teeCryptoModulePublicKey }}
           {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
