@@ -3,7 +3,21 @@ kind: StatefulSet
 metadata:
   name: {{ include "validator.fullname" . }}
   labels:
+    {{- if .Values.metrics.datadog.enabled }}
+    admission.datadoghq.com/enabled: "true"
+    tags.datadoghq.com/env: {{ .Values.metrics.datadog.env }}
+    tags.datadoghq.com/service: {{ include "validator.fullname" . }}
+    tags.datadoghq.com/version: {{ .Chart.AppVersion }}
+    {{- else }}
+    admission.datadoghq.com/enabled: "false"
+    {{- end }}
     {{- include "validator.labels" . | nindent 4 }}
+  annotations:
+    {{- if .Values.metrics.datadog.enabled }}
+    ad.datadoghq.com/exclude: "false"
+    {{- else }}
+    ad.datadoghq.com/exclude: "true"
+    {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -14,11 +28,24 @@ spec:
       {{- with .Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
+        {{- if $.Values.metrics.datadog.enabled }}
+        ad.datadoghq.com/exclude: "false"
+        {{- else }}
+        ad.datadoghq.com/exclude: "true"
+        {{- end }}
       {{- end }}
       labels:
         {{- include "validator.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- if .Values.metrics.datadog.enabled }}
+        admission.datadoghq.com/enabled: "true"
+        tags.datadoghq.com/env: {{ .Values.metrics.datadog.env }}
+        tags.datadoghq.com/service: {{ include "validator.fullname" . }}
+        tags.datadoghq.com/version: {{ .Chart.AppVersion }}
+        {{- else }}
+        admission.datadoghq.com/enabled: "false"
         {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
@@ -63,6 +90,20 @@ spec:
           {{- end }}
           {{- with .Values.env }}
           env:
+            {{- if $.Values.metrics.datadog.enabled }}
+            - name: DD_ENV
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/env']
+            - name: DD_SERVICE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/service']
+            - name: DD_VERSION 
+              valueFrom: 
+                fieldRef: 
+                  fieldPath: metadata.labels['tags.datadoghq.com/version']
+            {{- end }}
             - name: INDEX
               valueFrom:
                 fieldRef:

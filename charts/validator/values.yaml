@@ -59,6 +59,11 @@ env:
   - name: RUST_LOG
     value: "info"
 
+metrics:
+  datadog:
+    enabled: true
+    env: production
+
 initContainers:
   enabled: true
   redisHost: "validator-redis-master"
