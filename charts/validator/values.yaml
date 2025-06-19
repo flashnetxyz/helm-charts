@@ -51,9 +51,9 @@ ingress:
 config:
   grpcBindAddress: "0.0.0.0:50059"
   validatorRedisConnectionUrl: "redis://username:password@validator-redis-master:6379"
-  signingKey: "<YOUR_SIGNING_KEY>"
+  signingKey: []
   runningAuthority: "<YOUR_RUNNING_AUTHORITY>"
-  teeCryptoModulePublicKey: ""
+  teeCryptoModulePublicKey: []
 
 env:
   - name: RUST_LOG

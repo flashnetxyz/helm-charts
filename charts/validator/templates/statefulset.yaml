@@ -73,7 +73,7 @@ spec:
             - name: VALIDATOR_REDIS_CONNECTION_URL
               value: {{ $.Values.config.validatorRedisConnectionUrl }}
             - name: SIGNING_KEY
-              value: {{ $.Values.config.signingKey }}
+              value: {{ range $i, $e := $.Values.config.signingKey }}{{ if $i }},{{ end }}{{ $e }}{{ end }}
             - name: VALIDATOR_INDEX
               valueFrom:
                 fieldRef:
@@ -81,7 +81,7 @@ spec:
             - name: RUNNING_AUTHORITY
               value: {{ $.Values.config.runningAuthority }}
             - name: TEE_CRYPTO_MODULE_PUBLIC_KEY
-              value: {{ $.Values.config.teeCryptoModulePublicKey }}
+              value: {{ range $i, $e := $.Values.config.teeCryptoModulePublicKey }}{{ if $i }},{{ end }}{{ $e }}{{ end }}
           {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
