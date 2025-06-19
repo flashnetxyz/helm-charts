@@ -1,0 +1,19 @@
+{{- range $i := until (int .Values.replicas) }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "validator.fullname" $ }}-{{ $i }}
+  labels:
+    {{- include "validator.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: grpc
+      protocol: TCP
+      name: grpc
+  selector:
+    {{- include "validator.selectorLabels" $ | nindent 4 }}
+    apps.kubernetes.io/pod-index: "{{ $i }}"
+{{- end }}
