@@ -4,7 +4,6 @@ metadata:
   name: {{ include "validator.fullname" . }}-headless
   labels:
     {{- include "validator.labels" . | nindent 4 }}
-    {{- include "validator.fullname" . }}-headless: "true"
 spec:
   clusterIP: None
   ports:
