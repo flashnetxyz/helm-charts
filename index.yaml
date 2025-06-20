@@ -2,6 +2,22 @@ apiVersion: v1
 entries:
   risingwave-console:
   - apiVersion: v2
+    appVersion: 0.4.1
+    created: "2025-06-20T22:27:56.075556349Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart for Kubernetes
+    digest: 7a0157dd06876f977f9b3882d9292cbcaf5716c4e537ef96ca5044fad05cfec5
+    name: risingwave-console
+    type: application
+    urls:
+    - https://github.com/flashnetxyz/helm-charts/releases/download/risingwave-console-0.1.1/risingwave-console-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
     appVersion: 0.3.2
     created: "2025-06-20T22:25:14.574362469Z"
     dependencies:
@@ -137,4 +153,4 @@ entries:
     urls:
     - https://github.com/polarityorg/helm-charts/releases/download/wavekit-0.1.0/wavekit-0.1.0.tgz
     version: 0.1.0
-generated: "2025-06-20T22:25:14.574382487Z"
+generated: "2025-06-20T22:27:56.0755799Z"
