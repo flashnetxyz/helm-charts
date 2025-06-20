@@ -33,6 +33,23 @@ entries:
     urls:
     - https://github.com/flashnetxyz/helm-charts/releases/download/risingwave-console-0.1.0/risingwave-console-0.1.0.tgz
     version: 0.1.0
+  rwconsole:
+  - apiVersion: v2
+    appVersion: 0.4.1
+    created: "2025-06-20T22:31:07.559185931Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart for Kubernetes
+    digest: 152bf832677417dcfb651ace77b89c490f4004ccd6d95211a8ffa6c94305f430
+    name: rwconsole
+    type: application
+    urls:
+    - https://github.com/flashnetxyz/helm-charts/releases/download/rwconsole-0.1.2/rwconsole-0.1.2.tgz
+    version: 0.1.2
   validator:
   - apiVersion: v2
     appVersion: 0.0.1
@@ -153,4 +170,4 @@ entries:
     urls:
     - https://github.com/polarityorg/helm-charts/releases/download/wavekit-0.1.0/wavekit-0.1.0.tgz
     version: 0.1.0
-generated: "2025-06-20T22:27:56.0755799Z"
+generated: "2025-06-20T22:31:07.559203003Z"
