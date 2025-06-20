@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "risingwave-console.name" -}}
+{{- define "rwconsole.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "risingwave-console.fullname" -}}
+{{- define "rwconsole.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "risingwave-console.chart" -}}
+{{- define "rwconsole.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "risingwave-console.labels" -}}
-helm.sh/chart: {{ include "risingwave-console.chart" . }}
-{{ include "risingwave-console.selectorLabels" . }}
+{{- define "rwconsole.labels" -}}
+helm.sh/chart: {{ include "rwconsole.chart" . }}
+{{ include "rwconsole.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "risingwave-console.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "risingwave-console.name" . }}
+{{- define "rwconsole.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "rwconsole.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "risingwave-console.serviceAccountName" -}}
+{{- define "rwconsole.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "risingwave-console.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "rwconsole.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}

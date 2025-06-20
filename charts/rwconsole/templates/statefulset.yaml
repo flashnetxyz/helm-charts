@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "risingwave-console.fullname" . }}
+  name: {{ include "rwconsole.fullname" . }}
   labels:
-  {{- include "risingwave-console.labels" . | nindent 4 }}
+  {{- include "rwconsole.labels" . | nindent 4 }}
 spec:
-  serviceName: {{ include "risingwave-console.fullname" . }}
+  serviceName: {{ include "rwconsole.fullname" . }}
   replicas: 1
   selector:
     matchLabels:
-      {{- include "risingwave-console.selectorLabels" . | nindent 6 }}
+      {{- include "rwconsole.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -17,20 +17,20 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "risingwave-console.selectorLabels" . | nindent 8 }}
+        {{- include "rwconsole.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecret }}
       imagePullSecrets:
         - name: {{ . }}
       {{- end }}
-      serviceAccountName: {{ include "risingwave-console.serviceAccountName" . }}
+      serviceAccountName: {{ include "rwconsole.serviceAccountName" . }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ default (printf "v%s" .Chart.AppVersion) .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: webui
-              containerPort: {{ .Values.risingwave-console.port }}
+              containerPort: {{ .Values.rwconsole.port }}
             - name: metrics
               containerPort: {{ .Values.metrics.port }}
             {{- if .Values.debug.enabled }}
@@ -39,7 +39,7 @@ spec:
             {{- end }}
           env:
             - name: RCONSOLE_SERVER_PORT
-              value: {{ quote .Values.risingwave-console.port }}
+              value: {{ quote .Values.rwconsole.port }}
             - name: RCONSOLE_SERVER_METRICSPORT
               value: {{ quote .Values.metrics.port }}
             - name: RCONSOLE_SERVER_DEBUG_ENABLE
@@ -47,20 +47,20 @@ spec:
             - name: RCONSOLE_SERVER_DEBUG_PORT	
               value: {{ quote .Values.debug.port }}
             - name: RCONSOLE_RISECTLDIR
-              value: /var/risingwave-console/risectl
-            {{- if .Values.risingwave-console.extraEnvVars }}
-            {{- include "common.tplvalues.render" (dict "value" .Values.risingwave-console.extraEnvVars "context" $) | nindent 12 }}
+              value: /var/rwconsole/risectl
+            {{- if .Values.rwconsole.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.rwconsole.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
           volumeMounts:
-            - name: {{ include "risingwave-console.fullname" . }}
-              mountPath: /var/risingwave-console
+            - name: {{ include "rwconsole.fullname" . }}
+              mountPath: /var/rwconsole
   volumeClaimTemplates:
     - metadata:
-        name: {{ include "risingwave-console.fullname" . }}
+        name: {{ include "rwconsole.fullname" . }}
       spec:
-        storageClassName: {{ .Values.risingwave-console.storage.storageClassName }}
+        storageClassName: {{ .Values.rwconsole.storage.storageClassName }}
         accessModes:
           - ReadWriteOnce
         resources:
           requests:
-            storage: {{ .Values.risingwave-console.storage.size }}
+            storage: {{ .Values.rwconsole.storage.size }}

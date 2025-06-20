@@ -1,4 +1,4 @@
-# Default values for risingwave-console.
+# Default values for rwconsole.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -13,13 +13,13 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-risingwave-console:
+rwconsole:
   port: 8020
   storage:
     size: 10Gi
     storageClassName: "gp3"
 
-  ## @param risingwave-console.extraEnvVars Array with extra environment variables to add to Risingwave Console
+  ## @param rwconsole.extraEnvVars Array with extra environment variables to add to Risingwave Console
   ## e.g:
   ## extraEnvVars:
   ##   - name: FOO
