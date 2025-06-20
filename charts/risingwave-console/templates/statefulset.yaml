@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "risingwave-console.fullname" . }}
+  labels:
+  {{- include "risingwave-console.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "risingwave-console.fullname" . }}
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "risingwave-console.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+      {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "risingwave-console.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecret }}
+      imagePullSecrets:
+        - name: {{ . }}
+      {{- end }}
+      serviceAccountName: {{ include "risingwave-console.serviceAccountName" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ default (printf "v%s" .Chart.AppVersion) .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: webui
+              containerPort: {{ .Values.risingwave-console.port }}
+            - name: metrics
+              containerPort: {{ .Values.metrics.port }}
+            {{- if .Values.debug.enabled }}
+            - name: debug
+              containerPort: {{ .Values.debug.port }}
+            {{- end }}
+          env:
+            - name: RCONSOLE_SERVER_PORT
+              value: {{ quote .Values.risingwave-console.port }}
+            - name: RCONSOLE_SERVER_METRICSPORT
+              value: {{ quote .Values.metrics.port }}
+            - name: RCONSOLE_SERVER_DEBUG_ENABLE
+              value: {{ quote .Values.debug.enabled }}
+            - name: RCONSOLE_SERVER_DEBUG_PORT	
+              value: {{ quote .Values.debug.port }}
+            - name: RCONSOLE_RISECTLDIR
+              value: /var/risingwave-console/risectl
+            {{- if .Values.risingwave-console.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.risingwave-console.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          volumeMounts:
+            - name: {{ include "risingwave-console.fullname" . }}
+              mountPath: /var/risingwave-console
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ include "risingwave-console.fullname" . }}
+      spec:
+        storageClassName: {{ .Values.risingwave-console.storage.storageClassName }}
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.risingwave-console.storage.size }}

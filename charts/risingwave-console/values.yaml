@@ -1,10 +1,10 @@
-# Default values for wavekit.
+# Default values for risingwave-console.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 image:
-  repository: risingwavelabs/wavekit
-  pullPolicy: IfNotPresent
+  repository: risingwavelabs/risingwave-console
+  pullPolicy: Always
   tag: ""
 
 # This is for the secretes for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
@@ -13,13 +13,13 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-wavekit:
+risingwave-console:
   port: 8020
   storage:
     size: 10Gi
     storageClassName: "gp3"
 
-  ## @param wavekit.extraEnvVars Array with extra environment variables to add to Wavekit
+  ## @param risingwave-console.extraEnvVars Array with extra environment variables to add to Risingwave Console
   ## e.g:
   ## extraEnvVars:
   ##   - name: FOO

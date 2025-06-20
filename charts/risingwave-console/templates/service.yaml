@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "wavekit.fullname" . }}
+  name: {{ include "risingwave-console.fullname" . }}
   labels:
-    {{- include "wavekit.labels" . | nindent 4 }}
+    {{- include "risingwave-console.labels" . | nindent 4 }}
 spec:
   type: ClusterIP
   ports:
     - name: webui
-      port: {{ .Values.wavekit.port }}
+      port: {{ .Values.risingwave-console.port }}
     - name: metrics
       port: {{ .Values.metrics.port }}
     {{- if .Values.debug.enabled }}
@@ -16,4 +16,4 @@ spec:
       port: {{ .Values.debug.port }}
     {{- end }}
   selector:
-    {{- include "wavekit.selectorLabels" . | nindent 4 }}
+    {{- include "risingwave-console.selectorLabels" . | nindent 4 }}
