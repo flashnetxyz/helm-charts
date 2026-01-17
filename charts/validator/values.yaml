@@ -54,6 +54,7 @@ config:
   signingKey: []
   runningAuthority: "<YOUR_RUNNING_AUTHORITY>"
   teeCryptoModulePublicKey: []
+  validatorId: []  # Validator UUIDs from database registry (comma-separated in env)
 
 env:
   - name: RUST_LOG
