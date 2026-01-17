@@ -123,6 +123,8 @@ spec:
               value: {{ $.Values.config.runningAuthority }}
             - name: TEE_CRYPTO_MODULE_PUBLIC_KEY
               value: {{ range $i, $e := $.Values.config.teeCryptoModulePublicKey }}{{ if $i }},{{ end }}{{ $e }}{{ end }}
+            - name: VALIDATOR_ID
+              value: {{ range $i, $e := $.Values.config.validatorId }}{{ if $i }},{{ end }}{{ $e }}{{ end }}
           {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
