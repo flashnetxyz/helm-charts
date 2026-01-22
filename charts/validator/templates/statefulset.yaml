@@ -125,6 +125,14 @@ spec:
               value: {{ range $i, $e := $.Values.config.teeCryptoModulePublicKey }}{{ if $i }},{{ end }}{{ $e }}{{ end }}
             - name: VALIDATOR_ID
               value: {{ range $i, $e := $.Values.config.validatorId }}{{ if $i }},{{ end }}{{ $e }}{{ end }}
+            {{- if $.Values.config.databaseUrl }}
+            - name: DATABASE_URL
+              value: {{ $.Values.config.databaseUrl }}
+            {{- end }}
+            {{- if $.Values.config.dualWrite }}
+            - name: DUAL_WRITE
+              value: "true"
+            {{- end }}
           {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}

@@ -55,6 +55,9 @@ config:
   runningAuthority: "<YOUR_RUNNING_AUTHORITY>"
   teeCryptoModulePublicKey: []
   validatorId: []  # Validator UUIDs from database registry (comma-separated in env)
+  # PostgreSQL configuration for dual-write migration
+  databaseUrl: ""  # PostgreSQL connection URL (required when dualWrite is true)
+  dualWrite: false  # Enable dual-write mode for Redis→PostgreSQL migration
 
 env:
   - name: RUST_LOG
