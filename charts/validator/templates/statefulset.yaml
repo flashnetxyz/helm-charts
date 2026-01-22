@@ -126,8 +126,13 @@ spec:
             - name: VALIDATOR_ID
               value: {{ range $i, $e := $.Values.config.validatorId }}{{ if $i }},{{ end }}{{ $e }}{{ end }}
             {{- if $.Values.config.databaseUrl }}
+            {{- if kindIs "slice" $.Values.config.databaseUrl }}
+            - name: DATABASE_URL
+              value: {{ range $i, $e := $.Values.config.databaseUrl }}{{ if $i }},{{ end }}{{ $e }}{{ end }}
+            {{- else }}
             - name: DATABASE_URL
               value: {{ $.Values.config.databaseUrl }}
+            {{- end }}
             {{- end }}
             {{- if $.Values.config.dualWrite }}
             - name: DUAL_WRITE
