@@ -57,28 +57,6 @@ spec:
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.initContainers.enabled }}
-      initContainers:
-      - name: init-wait-redis
-        image: alpine:3.16.0
-        command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 $REDIS_HOST 6379 && exit 0 || sleep 3; done; exit 1"]
-        securityContext:
-          readOnlyRootFilesystem: true
-          runAsUser: 1000
-          capabilities:
-            drop:
-              - ALL
-        resources:
-            limits:
-              cpu: 20m
-              memory: 20Mi
-            requests:
-              cpu: 10m
-              memory: 10Mi
-        env:
-          - name: REDIS_HOST
-            value: {{ .Values.initContainers.redisHost | default "validator-1-redis-master" }}
-        {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           {{- with .Values.securityContext }}
@@ -111,8 +89,6 @@ spec:
             {{- toYaml . | nindent 12 }}
             - name: GRPC_BIND_ADDRESS
               value: {{ $.Values.config.grpcBindAddress }}
-            - name: VALIDATOR_REDIS_CONNECTION_URL
-              value: {{ $.Values.config.validatorRedisConnectionUrl }}
             - name: SIGNING_KEY
               value: {{ range $i, $e := $.Values.config.signingKey }}{{ if $i }},{{ end }}{{ $e }}{{ end }}
             - name: VALIDATOR_INDEX
@@ -133,10 +109,6 @@ spec:
             - name: DATABASE_URL
               value: {{ $.Values.config.databaseUrl }}
             {{- end }}
-            {{- end }}
-            {{- if $.Values.config.dualWrite }}
-            - name: DUAL_WRITE
-              value: "true"
             {{- end }}
           {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
