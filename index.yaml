@@ -53,6 +53,22 @@ entries:
   validator:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2026-01-23T23:52:56.434715464Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: A Helm chart for the Flashnet validator
+    digest: 37a6274ab593e73d01e191cc2201e1b49ffb901335649e8fbc16047a294080e9
+    name: validator
+    type: application
+    urls:
+    - https://github.com/flashnetxyz/helm-charts/releases/download/validator-0.1.4/validator-0.1.4.tgz
+    version: 0.1.4
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2026-01-22T22:36:23.375591081Z"
     dependencies:
     - name: common
@@ -230,4 +246,4 @@ entries:
     urls:
     - https://github.com/polarityorg/helm-charts/releases/download/wavekit-0.1.0/wavekit-0.1.0.tgz
     version: 0.1.0
-generated: "2026-01-22T22:36:23.375619624Z"
+generated: "2026-01-23T23:52:56.434760208Z"
