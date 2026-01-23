@@ -50,14 +50,11 @@ ingress:
 
 config:
   grpcBindAddress: "0.0.0.0:50059"
-  validatorRedisConnectionUrl: "redis://username:password@validator-redis-master:6379"
   signingKey: []
   runningAuthority: "<YOUR_RUNNING_AUTHORITY>"
   teeCryptoModulePublicKey: []
   validatorId: []  # Validator UUIDs from database registry (comma-separated in env)
-  # PostgreSQL configuration for dual-write migration
-  databaseUrl: ""  # PostgreSQL connection URL (required when dualWrite is true)
-  dualWrite: false  # Enable dual-write mode for Redis→PostgreSQL migration
+  databaseUrl: []  # PostgreSQL connection URLs (one per validator)
 
 env:
   - name: RUST_LOG
@@ -67,38 +64,3 @@ metrics:
   datadog:
     enabled: true
     env: production
-
-initContainers:
-  enabled: true
-  redisHost: "validator-redis-master"
-
-redis:
-  enabled: true
-  fullnameOverride: "validator-redis"  
-  global:
-    storageClass: "gp2"
-    redis:
-      password: "YourSecurePassword123!"
-  master:
-    persistence:
-      size: 8Gi
-  replica:
-    replicaCount: 1
-    persistence:
-      size: 8Gi
-  acl:
-    users:
-      - username: "default"
-        enabled: "off"
-        commands: "-@all"
-        keys: "~*"
-      - username: "username"
-        password: "password"
-        enabled: "on"
-        commands: "+@all"
-        keys: "~*"
-        channels: "&*"
-  commonConfiguration: |-
-    appendonly yes
-    save 60 1
-
