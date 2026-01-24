@@ -51,6 +51,31 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Datadog labels
+*/}}
+{{- define "validator.datadog.labels" -}}
+{{- if .Values.metrics.datadog.enabled }}
+admission.datadoghq.com/enabled: "true"
+tags.datadoghq.com/env: {{ .Values.metrics.datadog.env }}
+tags.datadoghq.com/service: {{ include "validator.fullname" . }}
+tags.datadoghq.com/version: {{ .Chart.AppVersion }}
+{{- else }}
+admission.datadoghq.com/enabled: "false"
+{{- end }}
+{{- end }}
+
+{{/*
+Datadog annotations
+*/}}
+{{- define "validator.datadog.annotations" -}}
+{{- if .Values.metrics.datadog.enabled }}
+ad.datadoghq.com/exclude: "false"
+{{- else }}
+ad.datadoghq.com/exclude: "true"
+{{- end }}
+{{- end }}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "validator.serviceAccountName" -}}

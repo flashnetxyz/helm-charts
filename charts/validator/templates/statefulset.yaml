@@ -3,21 +3,10 @@ kind: StatefulSet
 metadata:
   name: {{ include "validator.fullname" . }}
   labels:
-    {{- if .Values.metrics.datadog.enabled }}
-    admission.datadoghq.com/enabled: "true"
-    tags.datadoghq.com/env: {{ .Values.metrics.datadog.env }}
-    tags.datadoghq.com/service: {{ include "validator.fullname" . }}
-    tags.datadoghq.com/version: {{ .Chart.AppVersion }}
-    {{- else }}
-    admission.datadoghq.com/enabled: "false"
-    {{- end }}
+    {{- include "validator.datadog.labels" . | nindent 4 }}
     {{- include "validator.labels" . | nindent 4 }}
   annotations:
-    {{- if .Values.metrics.datadog.enabled }}
-    ad.datadoghq.com/exclude: "false"
-    {{- else }}
-    ad.datadoghq.com/exclude: "true"
-    {{- end }}
+    {{- include "validator.datadog.annotations" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -28,25 +17,14 @@ spec:
       {{- with .Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
-        {{- if $.Values.metrics.datadog.enabled }}
-        ad.datadoghq.com/exclude: "false"
-        {{- else }}
-        ad.datadoghq.com/exclude: "true"
-        {{- end }}
+        {{- include "validator.datadog.annotations" . | nindent 8 }}
       {{- end }}
       labels:
         {{- include "validator.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-        {{- if .Values.metrics.datadog.enabled }}
-        admission.datadoghq.com/enabled: "true"
-        tags.datadoghq.com/env: {{ .Values.metrics.datadog.env }}
-        tags.datadoghq.com/service: {{ include "validator.fullname" . }}
-        tags.datadoghq.com/version: {{ .Chart.AppVersion }}
-        {{- else }}
-        admission.datadoghq.com/enabled: "false"
-        {{- end }}
+        {{- include "validator.datadog.labels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
