@@ -75,6 +75,28 @@ ad.datadoghq.com/exclude: "true"
   {{- end }}
 {{- end }}
 
+
+{{/*
+Datadog variables
+*/}}
+{{- define "validator.datadog.variables" -}}
+  {{- if .Values.metrics.datadog.enabled }}
+- name: DD_ENV
+  valueFrom:
+    fieldRef:
+      fieldPath: metadata.labels['tags.datadoghq.com/env']
+- name: DD_SERVICE
+  valueFrom:
+    fieldRef:
+      fieldPath: metadata.labels['tags.datadoghq.com/service']
+- name: DD_VERSION 
+  valueFrom: 
+    fieldRef: 
+      fieldPath: metadata.labels['tags.datadoghq.com/version']
+  {{- else }}
+  {{- end }}
+{{- end }}
+
 {{/*
 Create the name of the service account to use
 */}}
@@ -88,4 +110,8 @@ Create the name of the service account to use
 
 {{- define "database_url_secret" -}}
   {{- default (printf "%s-database-url-secret" (include "validator.fullname" .)) .Values.databaseUrlSecretName }}
+{{- end }}
+
+{{- define "signing_key_secret" -}}
+  {{- default (printf "%s-signing-key-secret" (include "validator.fullname" .)) .Values.signingKeySecretName }}
 {{- end }}

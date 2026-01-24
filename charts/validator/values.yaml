@@ -32,9 +32,11 @@ service:
 databaseUrl: []
 databaseUrlSecretName: ~
 
+signingKey: []
+signingKeySecretName: ~
+
 config:
   grpcBindAddress: "0.0.0.0:50059"
-  signingKey: []
   runningAuthority: "<YOUR_RUNNING_AUTHORITY>"
   teeCryptoModulePublicKey: []
   validatorId: []  # Validator UUIDs from database registry (comma-separated in env)
