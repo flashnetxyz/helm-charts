@@ -14,39 +14,39 @@ spec:
       {{- include "validator.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+{{- with .Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
         {{- include "validator.datadog.annotations" . | nindent 8 }}
-      {{- end }}
+{{- end }}
       labels:
         {{- include "validator.labels" . | nindent 8 }}
-        {{- with .Values.podLabels }}
+{{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
-        {{- end }}
+{{- end }}
         {{- include "validator.datadog.labels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
+{{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+{{- end }}
       serviceAccountName: {{ include "validator.serviceAccountName" . }}
-      {{- with .Values.podSecurityContext }}
+{{- with .Values.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+{{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          {{- with .Values.securityContext }}
+{{- with .Values.securityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{ if .Values.command.enabled }}
+{{- end }}
+{{ if .Values.command.enabled }}
           command: {{ toYaml .Values.command.data | nindent 12 }}
-          {{- end }}
-          {{- with .Values.env }}
+{{- end }}
+{{- with .Values.env }}
           env:
-            {{- if $.Values.metrics.datadog.enabled }}
+  {{- if $.Values.metrics.datadog.enabled }}
             - name: DD_ENV
               valueFrom:
                 fieldRef:
@@ -59,7 +59,7 @@ spec:
               valueFrom: 
                 fieldRef: 
                   fieldPath: metadata.labels['tags.datadoghq.com/version']
-            {{- end }}
+  {{- end }}
             - name: INDEX
               valueFrom:
                 fieldRef:
@@ -79,35 +79,31 @@ spec:
               value: {{ range $i, $e := $.Values.config.teeCryptoModulePublicKey }}{{ if $i }},{{ end }}{{ $e }}{{ end }}
             - name: VALIDATOR_ID
               value: {{ range $i, $e := $.Values.config.validatorId }}{{ if $i }},{{ end }}{{ $e }}{{ end }}
-            {{- if $.Values.config.databaseUrl }}
-            {{- if kindIs "slice" $.Values.config.databaseUrl }}
             - name: DATABASE_URL
-              value: {{ range $i, $e := $.Values.config.databaseUrl }}{{ if $i }},{{ end }}{{ $e }}{{ end }}
-            {{- else }}
-            - name: DATABASE_URL
-              value: {{ $.Values.config.databaseUrl }}
-            {{- end }}
-            {{- end }}
-          {{- end }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "database_url_secret" $ }}
+                  key: database-url
+{{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: grpc
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          {{- with .Values.resources }}
+{{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
-          {{- end }}
-      {{- with .Values.nodeSelector }}
+{{- end }}
+{{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
+{{- end }}
+{{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
+{{- end }}
+{{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+{{- end }}

@@ -1,6 +1,13 @@
+---
 apiVersion: v2
 name: validator
 description: A Helm chart for the Flashnet validator
+home: https://flashnet.xyz/
+keywords:
+  - flashnet
+  - settlement
+  - validator
+  - nitro
 
 type: application
 

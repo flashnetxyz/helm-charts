@@ -1,3 +1,9 @@
+# Provide a name to substitute for the full names of resources
+fullnameOverride: ""
+
+# Provide a name to substitute for the name of the chart
+nameOverride: ""
+
 replicaCount: 1
 
 image:
@@ -13,8 +19,6 @@ command:
     - "/app/flashnet-validator"
 
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
 
 serviceAccount:
   create: false
@@ -25,13 +29,15 @@ service:
   type: ClusterIP
   port: 50059
 
+databaseUrl: []
+databaseUrlSecretName: ~
+
 config:
   grpcBindAddress: "0.0.0.0:50059"
   signingKey: []
   runningAuthority: "<YOUR_RUNNING_AUTHORITY>"
   teeCryptoModulePublicKey: []
   validatorId: []  # Validator UUIDs from database registry (comma-separated in env)
-  databaseUrl: []  # PostgreSQL connection URLs (one per validator)
 
 env:
   - name: RUST_LOG

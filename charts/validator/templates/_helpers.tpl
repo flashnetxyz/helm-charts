@@ -11,23 +11,23 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "validator.fullname" -}}
-{{- if .Values.fullnameOverride }}
+  {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
+  {{- else }}
+    {{- $name := default .Chart.Name .Values.nameOverride }}
+    {{- if contains $name .Release.Name }}
 {{- .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-{{- end }}
+    {{- else }}
+      {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+    {{- end }}
+  {{- end }}
 {{- end }}
 
 {{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "validator.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+  {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
@@ -36,9 +36,9 @@ Common labels
 {{- define "validator.labels" -}}
 helm.sh/chart: {{ include "validator.chart" . }}
 {{ include "validator.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
+  {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
+  {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
@@ -54,34 +54,38 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Datadog labels
 */}}
 {{- define "validator.datadog.labels" -}}
-{{- if .Values.metrics.datadog.enabled }}
+  {{- if .Values.metrics.datadog.enabled }}
 admission.datadoghq.com/enabled: "true"
 tags.datadoghq.com/env: {{ .Values.metrics.datadog.env }}
 tags.datadoghq.com/service: {{ include "validator.fullname" . }}
 tags.datadoghq.com/version: {{ .Chart.AppVersion }}
-{{- else }}
+  {{- else }}
 admission.datadoghq.com/enabled: "false"
-{{- end }}
+  {{- end }}
 {{- end }}
 
 {{/*
 Datadog annotations
 */}}
 {{- define "validator.datadog.annotations" -}}
-{{- if .Values.metrics.datadog.enabled }}
+  {{- if .Values.metrics.datadog.enabled }}
 ad.datadoghq.com/exclude: "false"
-{{- else }}
+  {{- else }}
 ad.datadoghq.com/exclude: "true"
-{{- end }}
+  {{- end }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
 {{- define "validator.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
+  {{- if .Values.serviceAccount.create }}
 {{- default (include "validator.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
+  {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
+  {{- end }}
 {{- end }}
+
+{{- define "database_url_secret" -}}
+  {{- default (printf "%s-database-url-secret" (include "validator.fullname" .)) .Values.databaseUrlSecretName }}
 {{- end }}
